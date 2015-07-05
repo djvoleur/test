@@ -293,8 +293,6 @@ on boot
 
     chown system system sys/devices/system/cpu/cpufreq/mp-cpufreq/cluster0_max_freq
     chmod 0660 sys/devices/system/cpu/cpufreq/mp-cpufreq/cluster0_max_freq
-    chown system system sys/devices/system/cpu/cpufreq/mp-cpufreq/boot_low_freq
-    chmod 0660 sys/devices/system/cpu/cpufreq/mp-cpufreq/boot_low_freq
 
     # Cluster1 (Atlas)
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
@@ -521,17 +519,21 @@ on fs
     chown system system /sys/class/backlight/panel/brightness
     chown system system /sys/class/backlight/panel/auto_brightness
 
-# Permissions for LCD HMT
-    chown system system /sys/class/lcd/panel/hmt_on
-    chown system system /sys/class/lcd/panel/hmt_bright
-    chown system system /sys/class/mdnie/mdnie/hmt_color_temperature
-
 # Permissions for LCD
     chown system radio /sys/class/lcd/panel/manufacture_code
     chown system radio /sys/class/lcd/panel/lcd_type
     chown system system /sys/class/lcd/panel/siop_enable
     chown system system /sys/class/lcd/panel/temperature
-    chown system media_rw /sys/class/backlight/panel/weakness_hbm_comp
+    chown system radio /sys/class/lcd/panel/mcd_mode
+    chown system media_rw /sys/class/backlight/panel/weakness_hbm_comp	
+
+# Permissions for LCD HMT
+    chown system system /sys/class/lcd/panel/hmt_on
+    chown system system /sys/class/lcd/panel/hmt_bright
+    chown system system /sys/class/mdnie/mdnie/hmt_color_temperature
+
+# Permissions for LCD ALPM
+    chown system system /sys/class/lcd/panel/alpm
 
 # Permissions for MDNIE
     chown system media_rw /sys/class/mdnie/mdnie/mode
@@ -838,10 +840,10 @@ on property:ro.use_data_netmgrd=true
 #
 # start multiple rilds based on multisim property
 #
-#on property:ro.multisim.simslotcount=2
-#    stop ril-daemon
-#    start ril-daemon
-#    start ril-daemon1
+on property:ro.multisim.simslotcount=2
+    stop ril-daemon
+    start ril-daemon
+    start ril-daemon1
 
 # LPM
 on property:ro.bootmode=charger
@@ -914,7 +916,7 @@ on property:sys.mobicoredaemon.enable=true
     start cs_service
 
 # SSWAP
-service swapon /sbin/sswap -s -f 1280
+service swapon /sbin/sswap -s
     class core
     user root
     group root
